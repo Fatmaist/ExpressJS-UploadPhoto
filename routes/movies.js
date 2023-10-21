@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-var pool = require('../queries')
+var pool = require('../models/queries')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 const path = require('path')
