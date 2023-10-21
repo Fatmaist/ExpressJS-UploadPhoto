@@ -10,4 +10,6 @@ pool.connect((err, res) => {
     console.log('connected')
 })
 
-app.listen(3000)
+app.listen(3000, function (){
+    console.log('server running')
+})
