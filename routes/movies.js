@@ -45,7 +45,7 @@ router.put('/upload', multer({ storage: diskStorage }).single('photo'), (req, re
 })
 
 // Create a PUT route to update photo to the database
-router.put('/:id', upload.single('photo'), (req, res) => {
+router.put('/photo/:id', upload.single('photo'), (req, res) => {
     const file = req.file
     if (!file){
         return res.status(400).json({
@@ -80,6 +80,43 @@ router.get('/movies', function (req, res){
             throw error
         }
         res.send(results.rows)
+    })
+})
+
+router.get('/photo/:id', (req, res) => {
+    const id = req.params.id
+    const selectQuery = 'SELECT photo FROM movies WHERE id = $1'
+
+    pool.query(selectQuery, [id], (err, result) => {
+        if (err) {
+            console.error(err)
+            return res.status(500).json({
+                status: false,
+                error: 'An error occurred while processing your request.',
+            })
+        }
+
+        const movies = result.rows[0]
+        res.sendFile(movies.photo)
+    })
+})
+
+router.delete('/photo/:id', function (req, res) {
+    const id = req.params.id
+    const deleteQuery = 'DELETE FROM movies WHERE id = $1'
+
+    pool.query(deleteQuery, [id], (err, result) => {
+        if (err) {
+            console.error(err)
+            return res.status(500).json({
+                status: false,
+                error: 'An error occurred while processing your request.',
+            })
+        }
+        res.json({
+            status: true,
+            message: 'Photo deleted successfully.',
+        })
     })
 })
 
